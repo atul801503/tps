@@ -7,9 +7,9 @@ const Listing = require("../models/listing");
 
 const valaidateListing = (req, res, next) => {
     let {error} = listingSchema.validate(req.body);
-       let errMsg = error.details.map((el) => el.message).join(",");
+       
        if(error) {
-        throw new ExpressError(400, errMsg);
+        throw new ExpressError(400, error);
        } else {
         next();
        }
