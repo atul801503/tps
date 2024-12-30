@@ -62,7 +62,8 @@ router.put("/:id",
     valaidateListing, 
     wrapAsync(async (req, res) => {
     let { id } = req.params;
-    await Listing.findByIdAndUpdate(id,{...req.body.listing});
+    await 
+    Listing.findByIdAndUpdate(id,{...req.body});
     res.redirect(`/listings/${id}`);
 }));
 
