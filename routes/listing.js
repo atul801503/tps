@@ -5,7 +5,8 @@ const { listingSchema, reviewSchema } = require("../schema.js")
 const ExpressError = require("../utils/ExpressError.js");
 const Listing = require("../models/listing");
 
-const valaidateListing = (req, res, next) => {
+
+const validateListing = (req, res, next) => {
     let {error} = listingSchema.validate(req.body);
        
        if(error) {
@@ -39,7 +40,7 @@ router.get(
 
 //Create Route
 router.post("/",
-    valaidateListing, 
+    validateListing, 
     wrapAsync(async (req, res, next) => {
        
         const newLisitng = new Listing(req.body.listing);
@@ -59,7 +60,7 @@ router.get("/:id/edit", wrapAsync(async (req, res) => {
 
 // Update Route
 router.put("/:id",
-    valaidateListing, 
+    validateListing, 
     wrapAsync(async (req, res) => {
     let { id } = req.params;
     await 
@@ -68,7 +69,9 @@ router.put("/:id",
 }));
 
 //Delete Route
-router.delete("/:id", wrapAsync(async (req, res) => {
+router.delete(
+    "/:id",
+     wrapAsync(async (req, res) => {
     let { id } = req.params;
     let deleteListing = await Listing.findByIdAndDelete(id);
     console.log(deleteListing);

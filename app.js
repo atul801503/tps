@@ -5,6 +5,9 @@ const path  = require("path");
 const methodoverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
+const wrapAsync = require("./utils/wrapAsync");
+
+
 
 
 const listings = require("./routes/listing.js");
@@ -42,7 +45,7 @@ app.get("/", (req, res) => {
 
 
 app.use("/listings", listings);
-app.use("/listings/:id/reviews", reviews);
+
 
 
 
