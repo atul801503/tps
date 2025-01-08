@@ -50,20 +50,18 @@
       <div class="row">
        
             <% for(review of listing.reviews) { %>
-            <dov class="card col-5 ms-3 mb-3">
-               <div class="card-body">
-               <h5 class="card-title">Jane Doe</h5>
-                <p class="card-text"><%= review.comments %> </p>
-                <p class="card-text"><%= review.rating %> start</p>
-           
-        </div>
-        <form class="mb-3" 
-        method="POST" 
-        action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
-            <button class="btn btn-sm btn-dark">Delete</button>
-        </form>
-
-        </dov>
+                <div class="card col-5 ms-3 mb-3">
+                    <div class="card-body">
+                        <h5 class="card-title">Jane Doe</h5>
+                        <p class="card-text"><%= review.comments %> </p>
+                        <p class="card-text"><%= review.rating %> star</p>
+                    </div>
+                    <form class="mb-3" 
+                        method="POST" 
+                        action="/listings/<%= listing._id %>/reviews/<%= review._id %>?_method=DELETE">
+                        <button class="btn btn-sm btn-dark">Delete</button>
+                    </form>
+                </div>
         <% } %>
     </div>
 </div>

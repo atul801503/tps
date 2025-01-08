@@ -5,13 +5,10 @@ const path  = require("path");
 const methodoverride = require("method-override");
 const ejsMate = require("ejs-mate");
 const ExpressError = require("./utils/ExpressError.js");
-const wrapAsync = require("./utils/wrapAsync");
-
-
-
 
 const listings = require("./routes/listing.js");
 const reviews = require("./routes/review.js");
+
 
 const MONGO_URL = "mongodb://127.0.0.1:27017/wanderlust";
 
@@ -45,6 +42,7 @@ app.get("/", (req, res) => {
 
 
 app.use("/listings", listings);
+app.use("/listings/:id/reviews", reviews); 
 
 
 
@@ -54,11 +52,6 @@ app.use("/listings", listings);
 
 
 
-app.get("/listings/:id", wrapAsync(async (req, res) => {
-   let {id} = req.params;
-   const listing = await Listing.findById(id);
-   res.render("listings/show.ejs", {listing});
-}));
 
 // app.get("/testListing", async (req, res) => {
 //    let sampleListing = new Listing({
