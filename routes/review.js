@@ -22,26 +22,25 @@ const validateReview = (req, res, next) => {
   // Reviews
 //Post Review Route
 router.post(
-    "/",
-    validateReview, // Middleware to validate the review data
-    wrapAsync(async (req, res) => {
+  "/",
+  wrapAsync(async (req, res) => {
+    
+      // Find the listing by ID from the route parameters
+      let listing = await Listing.findById(req.params.id);
       
-        // Find the listing by ID from the route parameters
-        let listing = await Listing.findById(req.params.id);
-        
-        // Create a new review with the review data from the request body
-        let newReview = new Review(req.body.review);
-        
-        // Push the new review to the listing's reviews array
-        listing.reviews.push(newReview);
-        
-        // Save the new review and listing
-        await newReview.save();
-        await listing.save();
-        
-        // Redirect back to the listing page
-        res.redirect(`/listings/${listing._id}`);
-    })
+      // Create a new review with the review data from the request body
+      let newReview = new Review(req.body.review);
+      
+      // Push the new review to the listing's reviews array
+      listing.reviews.push(newReview);
+      
+      // Save the new review and listing
+      await newReview.save();
+      await listing.save();
+      
+      // Redirect back to the listing page
+      res.redirect(`/listings/${listing._id}`);
+  })
 );
 //Delete Rreview Route
 router.delete("/:reviewId",
