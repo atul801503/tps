@@ -1,9 +1,9 @@
 const express = require("express");
-const router = express.Router();
-const wrapAsync = require("../utils/wrapAsync");
+const router = express.Router({ mergeParams: true });
+const wrapAsync = require("../utils/wrapAsync.js");
 const ExpressError = require("../utils/ExpressError.js");
 const { reviewSchema } = require("../schema.js");
-const Review = require("../models/review");
+const Review = require("../models/review.js");
 const Listing = require("../models/listing.js");
 
 const validateReview = (req, res, next) => {
@@ -17,29 +17,32 @@ const validateReview = (req, res, next) => {
       next();
     }
   };
-  
+
  
-  
-
-
-// Reviews
+  // Reviews
 //Post Review Route
 router.post(
     "/",
-    validateReview,
+    validateReview, // Middleware to validate the review data
     wrapAsync(async (req, res) => {
+      
+        // Find the listing by ID from the route parameters
         let listing = await Listing.findById(req.params.id);
+        
+        // Create a new review with the review data from the request body
         let newReview = new Review(req.body.review);
-
+        
+        // Push the new review to the listing's reviews array
         listing.reviews.push(newReview);
-
+        
+        // Save the new review and listing
         await newReview.save();
         await listing.save();
-
-        res.redirect(`/listing/${listing._id}`);
+        
+        // Redirect back to the listing page
+        res.redirect(`/listings/${listing._id}`);
     })
 );
-
 //Delete Rreview Route
 router.delete("/:reviewId",
     wrapAsync(async (req, res) => {

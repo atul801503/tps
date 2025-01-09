@@ -1,38 +1,20 @@
-const express = require("express")
+const express = require("express");
 const app = express();
-// const users = require("./routes/user.js")
+const users = require("./routes/user.js");
+const posts = require("./routes/post.js");
+
+app.get("/getcookies", (req, res) => {
+    res.cookie("great", "hello");
+    res.send("sent you some cookies");
+});
 
 app.get("/", (req, res) => {
-    res.send("Hi, I am root!");
+    res.send("Hi, I am root");
 });
 
-//Index - users
-router.get("/users", (req, res) => {
-    res.send("GET for users");
+app.use("/users", users);
+app.use("/posts", posts);
+
+app.listings(3000, () => {
+    console.log("server is listing to 3000");
 });
-
-//Show - users
-router.get("/users/:id", (req, res) => {
-    res.send("GET for users");
-});
-
-//POST - users
-router.post("/users", (req, res) => {
-    res.send("POST for users");
-});
-
-// DELETE - users 
-router.delete("/users/:id", (req, res) => {
-    res.send("DELETE for users");
-});
-
-
-
-
-
-
-
-
-app.listen(3000, () => {
-    console.log("server is listing to 3000")
-})

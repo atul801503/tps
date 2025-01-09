@@ -53,20 +53,7 @@ app.use("/listings/:id/reviews", reviews);
 
 
 
-// app.get("/testListing", async (req, res) => {
-//    let sampleListing = new Listing({
-//             title: "My Sweet Patna",
-//             description: "By the Town",
-//             price: 1000,
-//             location: "JD Women Hostel",
-//             country: "India",
-//         });
 
-//         await sampleListing.save();
-//         console.log("Sample was saved");
-//         res.send("Successful testing");
-    
-// });
 
 // Catch-all route for undefined routes
 app.all("*", (req, res, next) => {
