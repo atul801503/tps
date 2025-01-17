@@ -13,16 +13,15 @@ const validateReview = (req, res, next) => {
     let errMsg = error.details.map((el) => el.message).join(",");
       throw new ExpressError(400, errMsg);
     } else {
-     
-      next();
+     next();
     }
   };
 
- 
-  // Reviews
+ // Reviews
 //Post Review Route
 router.post(
   "/",
+  validateReview,
   wrapAsync(async (req, res) => {
     
       // Find the listing by ID from the route parameters
@@ -30,13 +29,14 @@ router.post(
       
       // Create a new review with the review data from the request body
       let newReview = new Review(req.body.review);
-      
+      console.log(newReview);
       // Push the new review to the listing's reviews array
       listing.reviews.push(newReview);
       
       // Save the new review and listing
       await newReview.save();
       await listing.save();
+      req.flash("success", "New Review Created");
       
       // Redirect back to the listing page
       res.redirect(`/listings/${listing._id}`);
@@ -49,11 +49,10 @@ router.delete("/:reviewId",
 
     await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } });
     await Review.findByIdAndDelete(reviewId);
-
-    
+    req.flash("success", "Review Deleted");
     res.redirect(`/listings/${id}`);
     })
-)
+);
 
 module.exports = router;
 

@@ -11,8 +11,14 @@ const listingSchema = new mongoose.Schema({
         filename: String,
     },
     reviews: [
-        { type: mongoose.Schema.Types.ObjectId, ref: 'Review' } // Ensure 'Review' matches the registered model name
+        { type: mongoose.Schema.Types.ObjectId,
+             ref: 'Review' 
+            } // Ensure 'Review' matches the registered model name
     ],
+    owner: {
+        type: Schema.Types.ObjectId,
+        ref: "User",
+    },
 });
 
 

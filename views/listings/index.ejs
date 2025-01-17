@@ -1,4 +1,5 @@
-<% layout("/layouts/boilerplate") %>
+<% layout("layouts/boilerplate") %>
+<%= success %>
 
 <div class="container mt-4">
     <h3 class="mb-4">All Listings</h3>
@@ -14,14 +15,17 @@
                 <div class="col-md-4 col-sm-6 mb-4">
                     <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
                         <div class="card h-100">
-                            <img src="<%= listing.image && listing.image.url ? listing.image.url : '/default-image.jpg' %>" 
-                                 class="card-img-top" 
-                                 alt="<%= listing.title %>" 
-                                 style="height: 200px; object-fit: cover;">
+                            <img 
+                            src="<%= listing.image.url %>" 
+                            class="card-img-top" 
+                            alt="<%= listing.title %> image" 
+                            style="height: 20rem;" 
+                            />
+                            <div class="card-img-overlay"></div>
                             <div class="card-body">
                                 <h5 class="card-title"><%= listing.title %></h5>
                                 <p class="card-text">
-                                    &#8377; <%= listing.price.toLocaleString("en-IN") %> /night
+                                   &#8377; <%= listing.price.toLocaleString("en-IN") %> /night
                                 </p>
                             </div>
                         </div>
