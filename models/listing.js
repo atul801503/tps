@@ -16,7 +16,7 @@ const listingSchema = new mongoose.Schema({
             } // Ensure 'Review' matches the registered model name
     ],
     owner: {
-        type: Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: "User",
     },
 });
