@@ -48,8 +48,10 @@ module.exports.validateReview = (req, res, next) => {
   if (error) {
     const msg = error.details.map((el) => el.message).join(", ");
     throw new ExpressError(msg, 400);
+  }else{
+    next();
   }
-  next();
+  
 };
 
   
@@ -57,7 +59,7 @@ module.exports.isReviewAuthor = async (req, res, next) =>{
   const {id,  reviewId } = req.params;
       let review = await Review.findById(reviewId);
       if(!review.author.equals(res.locals.currUser._id)) {
-        req.flash("error", "Yor are not the Owner of listing");
+        req.flash("error", "Yor are not ppu admin");
        return res.redirect(`/listings/${id}`);
       }
       next();
