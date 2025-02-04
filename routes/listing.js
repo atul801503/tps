@@ -8,15 +8,17 @@ const multer = require('multer');
 const {storage} = require("../cloudConfig.js");
 const upload = multer({ storage })
 
-router
-  .route("/")
-  .get(wrapAsync(listingController.index))
-  .post(
-    isLoggedIn,
-    upload.single("listing[image]"),
-    validateListing,
-    wrapAsync(listingController.createListing)
-  );
+.route("/:id")
+  .get(wrapAsync(listingController.showListing)) // Show listing details
+
+  // Update a listing (Only owner can update)
+  .put(
+    isLoggedIn, // Make sure the user is logged in
+    isOwner,    // Ensure that the user is the owner of the listing
+    upload.single("listing[image]"), // Handle file upload (if needed)
+    validateListing, // Validate listing data
+    wrapAsync(listingController.updateListing) // Update listing logic
+  )
   
 //New Route
 router
@@ -36,12 +38,12 @@ router
   wrapAsync(listingController.updateLisitng)
 )
 
-.delete(
-  isLoggedIn,
-  isOwner,
-  wrapAsync(listingController.destroyListing)
+ // Delete a listing (Only owner can delete)
+ .delete(
+  isLoggedIn, // Ensure the user is logged in
+  isOwner,    // Ensure that the user is the owner of the listing
+  wrapAsync(listingController.destroyListing) // Delete listing logic
 );
-
 
 // Edit Route
 router.get(

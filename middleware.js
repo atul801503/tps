@@ -22,15 +22,14 @@ module.exports.savedRedirectUrl = (req, res, next) => {
 };
 
 
-module.exports.isOwner = async (req, res, next) =>{
-  const { id } = req.params;
-      let listing = await Listing.findById(id);
-      if(!listing.owner._id.equals(res.locals.currUser._id)) {
-        req.flash("error", "Yor are not the Owner of listing");
-       return res.redirect(`/listings/${id}`);
-      }
-      next();
-};
+module.exports.isOwner = async function isOwner(req, res, next) {
+  const listing = await Listing.findById(req.params.id);
+  if (!listing || !listing.owner.equals(req.user._id)) {
+    req.flash('error', 'You are not authorized to do that');
+    return res.redirect(`/listings/${req.params.id}`);
+  }
+  next();
+}
 
 module.exports.validateListing = (req, res, next) => {
   let { error } = listingSchema.validate(req.body);
