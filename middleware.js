@@ -1,7 +1,8 @@
 const Listing = require("./models/listing");
+const Review = require("./models/review.js");
 const ExpressError = require("./utils/ExpressError.js");
 const { listingSchema, reviewSchema } = require("./schema.js");
-const Review = require("./models/review.js");
+
 
 module.exports.isLoggedIn= (req, res, next) => {
   if (!req.isAuthenticated()) {
@@ -43,15 +44,13 @@ module.exports.validateListing = (req, res, next) => {
 
 
 module.exports.validateReview = (req, res, next) => {
-   let { error } = reviewSchema.validate(req.body);
-
-    if (error) {
-    let errMsg = error.details.map((el) => el.message).join(",");
-      throw new ExpressError(400, errMsg);
-    } else {
-     next();
-    }
-  };
+  const { error } = reviewSchema.validate(req.body); // Validate the request body using Joi schema
+  if (error) {
+    const msg = error.details.map((el) => el.message).join(", ");
+    throw new ExpressError(msg, 400);
+  }
+  next();
+};
 
   
 module.exports.isReviewAuthor = async (req, res, next) =>{
