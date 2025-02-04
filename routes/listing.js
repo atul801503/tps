@@ -21,8 +21,8 @@ router
 //New Route
 router
 .get("/new", 
-  isLoggedIn, 
   isOwner,
+  isLoggedIn, 
   listingController.renderNewForm);
 
 router
