@@ -1,23 +1,25 @@
-const Review = require("../models/review.js");
-const Listing = require("../models/listing.js");
+const Listing = require("../models/listing");
+const Review = require("../models/review");
 
-module.exports.createReview = async(req,res)=>{
+module.exports.createReview = async (req, res) => {
     let listing = await Listing.findById(req.params.id);
     let newReview = new Review(req.body.review);
-    newReview.author=req.user._id;
-    console.log(newReview);
-    listing.reviews.push(newReview);
+    newReview.author = req.user._id; 
+
+    listing.reviews.push(newReview); 
+
     await newReview.save();
     await listing.save();
-   //  console.log("new review saved");
-   req.flash("success","New review created!");
-    res.redirect(`/listings/${listing._id}`);
-}
+    req.flash("success", "Review added successfully!");
+    res.redirect(`/listings/${req.params.id}`);
 
-module.exports.destroyReview = async(req,res) =>{
-    let {id,reviewId} =req.params;
-    await Listing.findByIdAndUpdate(id, {$pull : {reviews:reviewId} } );
+};
+
+module.exports.destroyReview = async (req, res) => { // âœ… Fixed function name
+    let { id, reviewId } = req.params;
+
+    await Listing.findByIdAndUpdate(id, { $pull: { reviews: reviewId } }); // âœ… Fixed $pull
     await Review.findByIdAndDelete(reviewId);
-    req.flash("success","review deleted!");
-  res.redirect(`/listings/${id}`);
-}
+    req.flash("success", "Review Deleted");
+    res.redirect(`/listings/${id}`); // âœ… Fixed string interpolation
+};

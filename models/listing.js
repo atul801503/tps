@@ -38,11 +38,11 @@ const listingSchema = new Schema({
            type: [Number],
            required: true
          }
-       },
+       },       
        category: {
          type: [String],
          required: true,
-         enum: ["Trending", "Rooms", "Iconic cities", "Mountains", "Castles", "Amazing pools", "Camping", "Farms", "Arctic", "Domes", "Boats"]
+         enum: ["PPU Hubs", "PPU Syllabus", "PPU NewsPaper Cutting", "PPU Study center", "PPU Notice", "PPU College List"]
      }
  
  
