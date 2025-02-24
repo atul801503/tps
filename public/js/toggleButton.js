@@ -1,15 +1,38 @@
 document.addEventListener("DOMContentLoaded", () => {
-    let categorySelect = document.getElementById("category-filter");
+    const categorySelect = document.getElementById("category-filter");
 
-    if (categorySelect) {
-        categorySelect.addEventListener("change", (event) => {
-            let selectedCategory = event.target.value;
-            let listings = document.querySelectorAll(".listing-card");
-
-            listings.forEach(listing => {
-                let category = listing.getAttribute("data-category");
-                listing.style.display = category === selectedCategory || selectedCategory === "all" ? "block" : "none";
-            });
-        });
+    if (!categorySelect) {
+        console.warn("⚠️ No category filter dropdown found!");
+        return; // Stop execution if dropdown is missing
     }
+
+    categorySelect.addEventListener("change", (event) => {
+        const selectedCategory = event.target.value;
+        const listings = document.querySelectorAll(".listing-card");
+
+        if (listings.length === 0) {
+            console.warn("⚠️ No listings found!");
+            return;
+        }
+
+        listings.forEach(listing => {
+            const category = listing.getAttribute("data-category");
+
+            if (!category) {
+                console.warn(`⚠️ Listing missing 'data-category' attribute:`, listing);
+                return;
+            }
+
+            // Handle multiple categories (if stored as comma-separated string)
+            const categories = category.split(",").map(c => c.trim());
+
+            // Show or hide listing based on selected category
+            listing.style.display =
+                categories.includes(selectedCategory) || selectedCategory === "all"
+                    ? "block"
+                    : "none";
+        });
+    });
+
+    console.log("✅ Category filter initialized.");
 });

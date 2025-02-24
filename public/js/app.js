@@ -17,32 +17,3 @@
       }, false)
     })
   })()
-  
-  
-  // delete popover
-  document.addEventListener('DOMContentLoaded', () => {
-    const deleteButtons = document.querySelectorAll('.delete-btn');
-    const popover = document.getElementById('popover');
-    let deleteIndex = null;
-  
-    deleteButtons.forEach(button => {
-        button.addEventListener('click', (event) => {
-            deleteIndex = event.target.dataset.index;
-            popover.style.display = 'block';
-        });
-    });
-  
-    document.getElementById('confirm-delete').addEventListener('click', () => {
-        if (deleteIndex !== null) {
-            // Perform deletion logic (e.g., sending a request to the server)
-            console.log(`Delete item at index: ${deleteIndex}`);
-            popover.style.display = 'none';
-            // For demo purposes, reload the page to show the item is deleted
-            location.reload();
-        }
-    });
-  
-    document.getElementById('cancel-delete').addEventListener('click', () => {
-        popover.style.display = 'none';
-    });
-  });

@@ -1,13 +1,27 @@
-const filters = document.querySelectorAll('.filter');
+document.addEventListener("DOMContentLoaded", () => { // Ensure DOM is loaded
+    const filters = document.querySelectorAll(".filter");
 
-filters.forEach(filter => {
-    filter.addEventListener('click', () => {
-        const category = filter.querySelector('p')?.textContent.trim(); // Trim whitespace
-        console.log("Clicked category:", category); // Debugging
-        if (category) {
-            window.location.href = `/listings/category?filter=${encodeURIComponent(category)}`;
-        } else {
-            console.error("Category not found");
-        }
+    if (filters.length === 0) {
+        console.warn("No filter elements found!");
+        return; // Stop execution if no filters exist
+    }
+
+    filters.forEach(filter => {
+        filter.addEventListener("click", () => {
+            const categoryElement = filter.querySelector("p");
+            if (!categoryElement) {
+                console.error("Category <p> element not found inside filter!");
+                return;
+            }
+
+            const category = categoryElement.textContent.trim();
+            console.log("Clicked category:", category); // Debugging log
+
+            if (category) {
+                window.location.href = `/listings/category?filter=${encodeURIComponent(category)}`;
+            } else {
+                console.error("Category text not found or empty");
+            }
+        });
     });
 });

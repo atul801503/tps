@@ -1,6 +1,7 @@
 const mongoose=require("mongoose");
 const Schema=mongoose.Schema;
 const Review=require("./review.js");
+const Joi = require("joi");
 
 
 
@@ -39,12 +40,9 @@ const listingSchema = new Schema({
            required: true
          }
        },       
-       category: {
-         type: [String],
-         required: true,
-         enum: ["PPU Hubs", "PPU Syllabus", "PPU NewsPaper Cutting", "PPU Study center", "PPU Notice", "PPU College List"]
-     }
- 
+       category: Joi.array().items(Joi.string().valid(
+         "PPU Hubs", "PPU Syllabus", "PPU NewsPaper Cutting", "PPU Study center", "PPU Notice", "PPU College List"
+       )).required(),
  
    
 
