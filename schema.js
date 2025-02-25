@@ -15,7 +15,7 @@ const reviewSchema = Joi.object({
     review: Joi.object({
         // Wrapped inside "review" to match request structure
         rating: Joi.number().min(1).max(5).required(),
-        comment: Joi.string().min(5).required(),
+        comment: Joi.string().required(),
     }).required(),
 });
 

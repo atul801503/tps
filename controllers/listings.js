@@ -82,7 +82,7 @@ originalImageUrl = originalImagerurl.replace("/upload", "/upload/h_300,w_250")
 
     let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { new: true });
 
-     if(typeof req.file !== "underfined") {
+     if(typeof req.file !== "undefined") {
     let url = req.file.path;
     let filename = req.file.filename;
     listing.image = {url, filename};

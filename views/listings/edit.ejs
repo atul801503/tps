@@ -19,7 +19,7 @@
 
    <div class="mb-3">
     <label for="image" class="form-label"> Upload new Image</label>
-    <input value="<%=listing.image%>" name="listing[image]" type="file" class="form-control">
+    <input value="<%=listing.image%>" name="listing[image]" type="file" class="form-control" required>
    </div>
 
    <div class="mb-3">
@@ -60,14 +60,15 @@
 
       <div class="mb-3">
         <label for="category" class="form-label">Category</label>
-        <select name="listing[category]" id="category" multiple class="form-select" aria-label="Multiple select example">
+        <select name="listing[category]" id="category" multiple class="form-select" required aria-label="Multiple select example">
+     
             <option value="Trending">PPU Hubs </option>
             <option value="Rooms">PPU Syllabus</option>
             <option value="Boats">BPPU NewsPaper Cutting</option>
             <option value="Domes">PPU Study center</option>
             <option value="Iconic cities">PPU Notice</option>
             <option value="Mountains">PPU College List </option>
-          
+           
         </select>
     </div>
 
