@@ -34,39 +34,36 @@ module.exports.renderNewForm = (req, res) => {
 
  module.exports.createListing = async (req, res, next) => {
   try {
-    // Make the geocoding request to Mapbox API
-    let response = await geocodingClient
-      .forwardGeocode({
-        query: req.body.listing.location, // States, Country
-        limit: 1,
-      })
-      .send();
+      // Make the geocoding request to Mapbox API
+      let response = await geocodingClient
+          .forwardGeocode({
+              query: req.body.listing.location, // States, Country
+              limit: 1,
+          })
+          .send();
+      // Extract the image URL and filename from the uploaded file
+      let url = req.file.path;
+      let filename = req.file.filename;
 
-    // Extract the image URL and filename from the uploaded file
-    let url = req.file.path;
-    let filename = req.file.filename;
+      // Create a new Listing object with the data from the request body
+      const newListing = new Listing(req.body.listing);
+      newListing.owner = req.user._id; // Associate the listing with the logged-in user
+      newListing.image = { url, filename }; // Add image info
+      newListing.geometry = response.body.features[0].geometry; // Add geometry from geocoding result
 
-    // Create a new Listing object with the data from the request body
-    const newListing = new Listing(req.body.listing);
-    newListing.owner = req.user._id; // Associate the listing with the logged-in user
-    newListing.image = { url, filename }; // Add image info
-    newListing.geometry = response.body.features[0].geometry; // Add geometry from geocoding result
+      // Save the new listing to the database
+      let savedListing = await newListing.save();
+      console.log(savedListing);
 
-    // Save the new listing to the database
-    let savedListing = await newListing.save();
-    console.log(savedListing);
-
-    // Flash success message and redirect to the listings page
-    req.flash("success", "New Listing Created");
-    res.redirect("/listings");
-
+      // Flash success message and redirect to the listings page
+      req.flash("success", "New Listing Created");
+      res.redirect("/listings");
   } catch (error) {
-    console.error("Error creating listing:", error);
-    req.flash("error", "There was an error creating your listing.");
-    res.redirect("/listings");
+      console.error("Error creating listing:", error);
+      req.flash("error", "There was an error creating your listing.");
+      res.redirect("/listings");
   }
 };
-
 
  module.exports.renderEditForm = async (req, res) => {
     const { id } = req.params;
