@@ -32,19 +32,76 @@
           <a class="nav-link" href="/listings">Explore</a>
         </div>
        
-         <div class="navbar-nav ms-auto">
-          <form class="d-flex" role="search">
+        <div class="navbar-nav ms-auto">
+          <form class="d-flex" role="search" id="searchForm">
             <input 
-            class="form-control me-2 search-inp" 
-            type="search" 
-            placeholder="Search destination" 
-       
+              id="searchInput"
+              class="form-control me-2 search-inp" 
+              type="search" 
+              placeholder="Search destination"
             />
             <button class="btn search-btn" type="submit">
-              <i class="fa-solid fa-magnifying-glass-location"></i>Search
+              <i class="fa-solid fa-magnifying-glass-location"></i> Search
             </button>
           </form>
-         </div>
+        </div>
+        
+        <script>
+          document.getElementById("searchForm").addEventListener("submit", handleSearch);
+        
+          function handleSearch(event) {
+            event.preventDefault(); // Prevent page reload
+        
+            let query = document.getElementById("searchInput").value.trim();
+        
+            if (query) {
+              console.log("Searching for:", query);
+              
+              // Redirect to search results page
+              window.location.href = `/search?query=${encodeURIComponent(query)}`;
+        
+              // OR if you want to fetch results dynamically without redirecting
+              // fetchResults(query);
+            } else {
+              alert("Please enter a destination to search.");
+            }
+          }
+        
+          // Example function for fetching search results dynamically
+          function fetchResults(query) {
+            fetch(`/api/search?query=${encodeURIComponent(query)}`)
+              .then(response => {
+                if (!response.ok) {
+                  throw new Error(`HTTP error! Status: ${response.status}`);
+                }
+                return response.json();
+              })
+              .then(data => {
+                console.log("Search Results:", data);
+                // Handle displaying search results dynamically
+              })
+              .catch(error => console.error("Error fetching results:", error));
+          }
+        </script>
+        
+        
+        <script>
+          function handleSearch(event) {
+            event.preventDefault(); // Prevent form submission
+        
+            let query = document.getElementById("searchInput").value.trim();
+        
+            if (query) {
+              console.log("Searching for:", query);
+              // Redirect to a search results page
+              window.location.href = `/search?query=${encodeURIComponent(query)}`;
+            } else {
+              alert("Please enter a destination to search.");
+            }
+          }
+        </script>
+        
+
             <div class="navbar-nav ms-auto">
               <a class="nav-link" href="/listings/new">Add Place</a>
 

@@ -30,16 +30,14 @@ const listingSchema = new Schema({
    },
    geometry: {
        type: {
-           type: String, // Don't do `{ location: { type: String } }`
+           type: String, // Don't do { location: { type: String } }
            enum: ["Point"], // 'location.type' must be 'Point'
-           required: true,
        },
        coordinates: {
            type: [Number],
-           required: true,
        },
    },
-   category: [String],
+   category: String,
 });
 //when the listing is deleted, delete the reviews associated with that listing.
 listingSchema.post("findOneAndDelete",async(listing) =>{

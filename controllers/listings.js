@@ -77,21 +77,33 @@ originalImageUrl = originalImagerurl.replace("/upload", "/upload/h_300,w_250")
     res.render("listings/edit.ejs", { listing });
   };
 
-  module.exports.updateLisitng = async (req, res) => {
-    const { id } = req.params;
+  module.exports.updateListing = async (req, res) => {
+    try {
+        const { id } = req.params;
 
-    let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { new: true });
+        let listing = await Listing.findByIdAndUpdate(id, { ...req.body.listing }, { new: true });
 
-     if(typeof req.file !== "undefined") {
-    let url = req.file.path;
-    let filename = req.file.filename;
-    listing.image = {url, filename};
-    await listing.save();
-  }
-    req.flash('success',"Post has been successfully updated");    
-    res.redirect(`/listings/${id}`)
-    };
+        if (!listing) {
+            req.flash('error', "Listing not found");
+            return res.redirect('/listings');
+        }
 
+        if (req.file) { // Better check
+            let url = req.file.path;
+            let filename = req.file.filename;
+            listing.image = { url, filename };
+            await listing.save();
+        }
+
+        req.flash('success', "Post has been successfully updated");
+        res.redirect(`/listings/${id}`);
+
+    } catch (error) {
+        console.error("Error updating listing:", error);
+        req.flash('error', "Something went wrong!");
+        res.redirect('/listings');
+    }
+};
 
     module.exports.destroyListing = async (req, res) => {
         const { id } = req.params;
@@ -103,3 +115,5 @@ originalImageUrl = originalImagerurl.replace("/upload", "/upload/h_300,w_250")
         req.flash("success", "Listing deleted successfully.");
         res.redirect("/listings");
       };
+
+      
