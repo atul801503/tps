@@ -93,23 +93,23 @@
 
     try {
       console.log("Initiating search for:", query);
-      const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+      // const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
       
-      console.log("Response status:", response.status);
-      const data = await response.json();
-      console.log("Received data:", data);
+      // console.log("Response status:", response.status);
+      // const data = await response.json();
+      // console.log("Received data:", data);
 
-      if (!response.ok) {
-        throw new Error(data.message || `HTTP error! status: ${response.status}`);
-      }
+      // if (!response.ok) {
+      //   throw new Error(data.message || `HTTP error! status: ${response.status}`);
+      // }
       
-      if (!data.data || data.data.length === 0) {
-        alert(`No results found for "${query}". Try different keywords!`);
-        return;
-      }
+      // if (!data.data || data.data.length === 0) {
+      //   alert(`No results found for "${query}". Try different keywords!`);
+      //   return;
+      // }
       
       // Redirect to search results page
-      window.location.href = `/search?query=${encodeURIComponent(query)}`;
+      window.location.href = `/search?q=${encodeURIComponent(query)}`;
     } catch (err) {
       console.error("Search error details:", {
         error: err.message,

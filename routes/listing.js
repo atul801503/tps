@@ -33,7 +33,7 @@ router
 //  validateListing,
   wrapAsync(listingController.updateListing)
 
-)   
+)
 
 .delete(
   isLoggedIn,
@@ -51,7 +51,11 @@ router.get(
 );
 
 
-
+router.get("/category/:id", async (req, res) =>{
+  const { id } = req.params;
+  const allListings = await Listing.find({ category: id }).sort({ _id: -1 });
+  res.render("listings/index.ejs", { allListings });
+})
 
 
 module.exports = router;

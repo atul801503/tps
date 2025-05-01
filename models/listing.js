@@ -17,15 +17,6 @@ const listingSchema = new Schema({
    },
    category: {
        type: String,
-       enum: [
-           "PPU Hubs",
-           "PPU Syllabus",
-           "PPU NewsPaper Cutting",
-           "PPU Study Center",
-           "PPU Notice",
-           "PPU College List",
-           "Trending",
-       ],
    },
 });
 
