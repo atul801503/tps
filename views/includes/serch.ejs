@@ -1,0 +1,35 @@
+// Search route for rendering results page
+app.get('/search', async (req, res) => {
+  try {
+    const query = req.query.query;
+    
+    if (!query) {
+      return res.redirect('/listings');
+    }
+
+    const sanitizedQuery = query.replace(/[^\w\s]/gi, '').trim();
+    
+    const results = await Listing.find({
+      $or: [
+        { title: { $regex: sanitizedQuery, $options: 'i' } },
+        { location: { $regex: sanitizedQuery, $options: 'i' } },
+        { description: { $regex: sanitizedQuery, $options: 'i' } }
+      ]
+    }).limit(50);
+
+    res.render('listings/index', { 
+      listings: results,
+      searchQuery: query 
+    });
+
+  } catch (error) {
+    console.error('Search error:', error);
+    res.redirect('/listings');
+  }
+});
+
+// API search endpoint
+app.get('/api/search', async (req, res) => {
+  // ... (use the previous search route implementation I provided)
+});
+

@@ -6,7 +6,7 @@
     padding: 0 1rem 0 1rem;
   }
   .search-btn:hover {
-    background-color: red;
+    background-color: darkred;
     color: white;
   }
   .search-btn i {
@@ -18,101 +18,104 @@
     padding: 0.5rem 3rem 0.5rem 3rem;
   }
 </style>
+
 <nav class="navbar navbar-expand-md bg-body-light border-bottom sticky-top">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="/listings"><i class="fa-regular fa-compass"></i></a>
-      <button class="navbar-toggler" type="button" 
-      data-bs-toggle="collapse" 
-      data-bs-target="#navbarNavAltMarkup">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
-        <div class="navbar-nav">
-        
-          <a class="nav-link" href="/listings">Explore</a>
-        </div>
-       
-        <div class="navbar-nav ms-auto">
-          <form class="d-flex" role="search" id="searchForm">
-            <input 
-              id="searchInput"
-              class="form-control me-2 search-inp" 
-              type="search" 
-              placeholder="Search destination"
-            />
-            <button class="btn search-btn" type="submit">
-              <i class="fa-solid fa-magnifying-glass-location"></i> Search
-            </button>
-          </form>
-        </div>
-        
-        <script>
-          document.getElementById("searchForm").addEventListener("submit", handleSearch);
-        
-          function handleSearch(event) {
-            event.preventDefault(); // Prevent page reload
-        
-            let query = document.getElementById("searchInput").value.trim();
-        
-            if (query) {
-              console.log("Searching for:", query);
-              
-              // Redirect to search results page
-              window.location.href = `/search?query=${encodeURIComponent(query)}`;
-        
-              // OR if you want to fetch results dynamically without redirecting
-              // fetchResults(query);
-            } else {
-              alert("Please enter a destination to search.");
-            }
-          }
-        
-          // Example function for fetching search results dynamically
-          function fetchResults(query) {
-            fetch(`/api/search?query=${encodeURIComponent(query)}`)
-              .then(response => {
-                if (!response.ok) {
-                  throw new Error(`HTTP error! Status: ${response.status}`);
-                }
-                return response.json();
-              })
-              .then(data => {
-                console.log("Search Results:", data);
-                // Handle displaying search results dynamically
-              })
-              .catch(error => console.error("Error fetching results:", error));
-          }
-        </script>
-        
-        
-        <script>
-          function handleSearch(event) {
-            event.preventDefault(); // Prevent form submission
-        
-            let query = document.getElementById("searchInput").value.trim();
-        
-            if (query) {
-              console.log("Searching for:", query);
-              // Redirect to a search results page
-              window.location.href = `/search?query=${encodeURIComponent(query)}`;
-            } else {
-              alert("Please enter a destination to search.");
-            }
-          }
-        </script>
-        
+  <div class="container-fluid">
+    <a class="navbar-brand" href="/listings">
+      <i class="fa-regular fa-compass"></i>
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavAltMarkup">
+      <span class="navbar-toggler-icon"></span>
+    </button>
 
-            <div class="navbar-nav ms-auto">
-              <a class="nav-link" href="/listings/new">Add Place</a>
+    <div class="collapse navbar-collapse" id="navbarNavAltMarkup">
+      <div class="navbar-nav">
+        <a class="nav-link" href="/listings">Explore</a>
+      </div>
 
-              <% if(!currUser) { %> 
-              <a class="nav-link" href="/signup"><b>Sign Up</b></a>
-              <a class="nav-link" href="/login"><b>Log in</b></a>
-           <% } %> <% if(currUser) { %> 
-              <a class="nav-link" href="/logout"><b>Log Out</b></a>
-            <% } %>
-            </div>
-        </div>
+      <div class="navbar-nav ms-auto">
+        <form class="d-flex" role="search" id="searchForm">
+          <input 
+            id="searchInput"
+            class="form-control me-2 search-inp" 
+            type="search" 
+            placeholder="Search destination"
+            name="query"
+          />
+          <button class="btn search-btn" type="submit">
+            <i class="fa-solid fa-magnifying-glass-location"></i> Search
+          </button>
+        </form>
+
+        <a class="nav-link" href="/listings/new">Add Place</a>
+
+        <% if (!currUser) { %>
+          <a class="nav-link" href="/signup"><b>Sign Up</b></a>
+          <a class="nav-link" href="/login"><b>Log In</b></a>
+        <% } else { %>
+          <a class="nav-link" href="/logout"><b>Log Out</b></a>
+        <% } %>
       </div>
     </div>
-  </nav>
+  </div>
+</nav>
+
+<!-- <script>
+  document.getElementById("searchForm").addEventListener("submit", handleSearch);
+
+  function handleSearch(event) {
+    event.preventDefault(); // Stop form from submitting normally
+
+    let query = document.getElementById("searchInput").value.trim();
+
+    if (query) {
+      console.log("Searching for:", query);
+      window.location.href = `/search?query=${encodeURIComponent(query)}`;
+    } else {
+      alert("Please enter a destination to search.");
+    }
+  }
+</script> -->
+
+<!-- Add this to your navbar section -->
+
+<script>
+  document.getElementById("searchForm").addEventListener("submit", handleSearch);
+
+  async function handleSearch(event) {
+    event.preventDefault();
+    const query = document.getElementById("searchInput").value.trim();
+    
+    if (!query) {
+      alert("Please enter a destination to search.");
+      return;
+    }
+
+    try {
+      console.log("Initiating search for:", query);
+      const response = await fetch(`/api/search?query=${encodeURIComponent(query)}`);
+      
+      console.log("Response status:", response.status);
+      const data = await response.json();
+      console.log("Received data:", data);
+
+      if (!response.ok) {
+        throw new Error(data.message || `HTTP error! status: ${response.status}`);
+      }
+      
+      if (!data.data || data.data.length === 0) {
+        alert(`No results found for "${query}". Try different keywords!`);
+        return;
+      }
+      
+      // Redirect to search results page
+      window.location.href = `/search?query=${encodeURIComponent(query)}`;
+    } catch (err) {
+      console.error("Search error details:", {
+        error: err.message,
+        stack: err.stack
+      });
+      alert("Search failed. Please check your connection and try again.");
+    }
+  }
+</script>

@@ -92,12 +92,76 @@ app.all("*", (req, res, next) => {
   next(new ExpressError(404, "Page Not Found"));
 });
 
+module.exports.filterListings=async(req, res)=>{
+  let category=req.query.filter;
+  let allListings=await Listing.find({}).where('category').in(category);    
+  res.render("listings/category.ejs", {allListings: allListings, category: category});
+};
+
+module.exports.searchListings=async(req, res)=>{
+  let {searchInput}=req.query;
+  const regex=new RegExp(searchInput, "i");
+  let searchedListing=await Listing.find({
+      $or:[
+          {title: {$regex: regex}},
+          {description: {$regex:regex}},
+          {location: {$regex: regex}},
+          {country: {$regex:regex}},
+          {category: {$regex: regex}}
+      ]
+  });
+  res.render("listings/category.ejs",{allListings: searchedListing, category: searchInput});
+};
+
 
 
 // Error handling middleware
 app.use((err, req, res, next) => {
   const { statusCode = 500, message = "Something went wrong" } = err;
   res.status(statusCode).render("error.ejs", { err, statusCode, message });
+});
+
+// In your /api/search route
+app.get('/api/search', async (req, res) => {
+  try {
+    console.log("Received search query:", req.query.query);
+    const searchQuery = req.query.query.replace(/[^\w\s]/gi, '').trim();
+    console.log("Sanitized query:", searchQuery);
+
+    const results = await Listing.find({
+      $or: [
+        { title: { $regex: searchQuery, $options: 'i' } },
+        { location: { $regex: searchQuery, $options: 'i' } }
+      ]
+    }).lean();
+
+    console.log("Search results from DB:", results);
+    
+    if (!results.length) {
+      return res.status(404).json({
+        success: false,
+        message: "No results found",
+        data: []
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      count: results.length,
+      data: results
+    });
+
+  } catch (error) {
+    console.error("Search route error:", {
+      message: error.message,
+      stack: error.stack,
+      query: req.query.query
+    });
+    res.status(500).json({
+      success: false,
+      message: "Internal server error during search"
+    });
+  }
 });
 
 app.listen(8080, () => {

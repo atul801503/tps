@@ -1,0 +1,15 @@
+<h2>Search Results for "<%= searchQuery %>"</h2>
+
+<% if (listings.length === 0) { %>
+  <p>No listings found for this location.</p>
+<% } else { %>
+  <% listings.forEach(listing => { %>
+    <div class="listing-card">
+      <h3><%= listing.title %></h3>
+      <p><%= listing.description %></p>
+      <p><strong>Location:</strong> <%= listing.location %></p>
+      <p><strong>Price:</strong> $<%= listing.price %></p>
+      <img src="<%= listing.image %>" alt="Listing image" style="width:200px;">
+    </div>
+  <% }) %>
+<% } %>
