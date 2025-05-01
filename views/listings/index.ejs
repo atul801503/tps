@@ -1,19 +1,20 @@
 <% layout("layouts/boilerplate") %>
 
-
 <style>
     #filter {
         display: flex;
         flex-wrap: wrap;
         align-items: center;
+        gap: 2rem;
+        margin-bottom: 2rem;
     }
 
     .filter {
         text-align: center;
-        margin-right: 2rem;
-        margin-top: 2rem;
         opacity: 0.6;
+        transition: opacity 0.3s;
     }
+
     .filter:hover {
         opacity: 1;
         cursor: pointer;
@@ -22,69 +23,77 @@
     .filter p {
         font-style: italic;
         font-size: 1rem;
+        margin: 0;
     }
-     .tax-info {
-        display: none;
-     }
-     .tax-toggle {
-        border: 1px solid black;
-        border-radius: 1rem;
-        height: 3.5rem;
-        padding: 1rem;
-        margin-left: 6rem;
-        display: flex;
-        align-items: center;
-     }
+
+    /* Dark Mode Styles */
+    .dark-mode {
+        background-color: #1a1a1a;
+        color: #ffffff;
+    }
+
+    .dark-mode .card {
+        background-color: #2d2d2d;
+        border-color: #404040;
+    }
+
+    .dark-mode .text-dark {
+        color: #ffffff !important;
+    }
+
+    .dark-mode-toggle {
+        margin-left: auto;
+        padding: 0.5rem;
+    }
+
+    #dark-mode-toggle {
+        padding: 8px 16px;
+        background-color: #4CAF50;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+
+    #dark-mode-toggle:hover {
+        background-color: #45a049;
+        transform: scale(1.05);
+    }
 </style>
 
 <div class="container mt-4">
-    <!-- <h3 class="mb-4">All Listings</h3> -->
+    <div id="filter">
+        <a href="/listings/category/trending" class="filter">
+            <div><i class="fa-solid fa-people-group"></i></div>
+            <p>Trending</p>
+        </a>
+        <a href="/listings/category/rooms" class="filter">
+            <div><i class="fa-solid fa-book-open"></i></div>
+            <p>Rooms</p>
+        </a>
+        <a href="/listings/category/boats" class="filter">
+            <div><i class="fa-regular fa-newspaper"></i></div>
+            <p>Boats</p>
+        </a>
+        <a href="/listings/category/dooms" class="filter">
+            <div><i class="fa-solid fa-building-circle-arrow-right"></i></div>
+            <p>Dooms</p>
+        </a>
+        <a href="/listings/category/iconic%20cities" class="filter">
+            <div><i class="fa-regular fa-note-sticky"></i></div>
+            <p>Iconic Cities</p>
+        </a>
+        <a href="/listings/category/mountains" class="filter">
+            <div><i class="fa-solid fa-rectangle-list"></i></div>
+            <p>Mountains</p>
+        </a>
 
-    <!-- Uncomment the form to enable "Create New Listing" button -->
-    <!-- <form method="GET" action="/listings/new" class="mb-4">
-        <button type="submit" class="btn btn-primary">Create New Listing</button>
-    </form> -->
-        
-    
-<div id="filter">
-    <a href="/listings/category/trending" class="filter">
-        <div><i class="fa-solid fa-people-group"></i></div>
-        <p>Trending</p>
-    </a>
-    <a href="/listings/category/rooms" class="filter">
-        <div><i class="fa-solid fa-book-open"></i></div>
-        <p>Rooms</p>
-    </a>
-    <a href="/listings/category/boats" class="filter">
-        <div><i class="fa-regular fa-newspaper"></i></div>
-        <p>Boats</p>
-    </a>
-    <a href="/listings/category/dooms" class="filter">
-        <div><i class="fa-solid fa-building-circle-arrow-right"></i></div>
-        <p>Dooms</p>
-    </a>
-    <a href="/listings/category/iconic cities" class="filter">
-        <div><i class="fa-regular fa-note-sticky"></i></div>
-        <p>Iconic Cities</p>
-    </a>
-    <a href="/listings/category/mountains" class="filter">
-        <div><i class="fa-solid fa-rectangle-list"></i></div>
-        <p>Mountains</p>
-    </a>
-    
-   <div class="tax-toggle">
-    <div class="form-check-reverse form-switch">
-        <input 
-        class="form-check-input" 
-        type="checkbox" role="switch" 
-        id="flexSwitchCheckDefault"
-        />
-        <label class="form-check-label" 
-        for="flexSwitchCheckDefault">
-        Default switch checkbox input</label>
-      </div>
-   </div>
-</div>
+        <div class="dark-mode-toggle">
+            <button id="dark-mode-toggle">Switch to Dark Mode</button>
+        </div>
+    </div>
+
     <div class="row">
         <% if (allListings && allListings.length > 0) { %>
             <% for (let listing of allListings) { %>
@@ -92,17 +101,15 @@
                     <a href="/listings/<%= listing._id %>" class="text-decoration-none text-dark">
                         <div class="card h-100">
                             <img 
-                            src="<%= listing.image.url %>" 
-                            class="card-img-top" 
-                            alt="<%= listing.title %> image" 
-                            style="height: 20rem;" 
+                                src="<%= listing.image.url %>" 
+                                class="card-img-top" 
+                                alt="<%= listing.title %>" 
+                                style="height: 20rem; object-fit: cover;"
                             />
-                            <div class="card-img-overlay"></div>
                             <div class="card-body">
                                 <h5 class="card-title"><%= listing.title %></h5>
                                 <p class="card-text">
-                                   &#8377; <%= listing.price.toLocaleString("en-IN") %>
-                                   <i class="tax-info">&nbsp; &nbsp;Atul </i>
+                                    &#8377; <%= listing.price.toLocaleString("en-IN") %>
                                 </p>
                             </div>
                         </div>
@@ -111,25 +118,32 @@
             <% } %>
         <% } else { %>
             <div class="col-12 text-center">
-                <p>No listings available at the moment. Please check back later.</p>
+                <p class="text-muted">No listings available at the moment.</p>
             </div>
         <% } %>
     </div>
 </div>
 
 <script>
-    let taxSwitch = document.getElementById("flexSwitchCheckDefault");
-    taxSwitch.addEventListener("click",() => {
-       let taxInfo = document.getElementsByClassName("tax-info");
-       for(info of taxInfo) {
-        if (info.style.display != "inline") {
-            info.style.display = "inline";
-        } else
-       info.style.display = "none";
-       }
+    // Dark Mode Toggle
+    const darkModeToggle = document.getElementById('dark-mode-toggle');
+    const body = document.body;
+
+    // Initialize dark mode from localStorage
+    const savedDarkMode = localStorage.getItem('darkMode') === 'true';
+    if (savedDarkMode) {
+        body.classList.add('dark-mode');
+        darkModeToggle.textContent = 'Switch to Light Mode';
+    }
+
+    darkModeToggle.addEventListener('click', () => {
+        body.classList.toggle('dark-mode');
+        const isDarkMode = body.classList.contains('dark-mode');
+        
+        // Update button text and save preference
+        darkModeToggle.textContent = isDarkMode 
+            ? 'Switch to Light Mode' 
+            : 'Switch to Dark Mode';
+        localStorage.setItem('darkMode', isDarkMode);
     });
 </script>
-
-
-<script src="/js/toggleButton.js"></script>
-<script src="/js/categoryListing.js"></script>
